@@ -1,0 +1,11 @@
+$kind: http-request
+url: http://localhost:3000/technicians
+method: POST
+body:
+  type: json
+  content: '{ "name": "Carlos Silva", "email": "carlos2@empresa.com" }'
+scripts:
+  - type: afterResponse
+    code: pm.collectionVariables.set("technician_id", pm.response.json().id);
+    language: text/javascript
+order: 4044812897416519

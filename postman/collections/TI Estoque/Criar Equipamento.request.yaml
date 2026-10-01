@@ -1,0 +1,27 @@
+$kind: http-request
+url: http://localhost:3000/equipments
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"name\": \"Notebook HP\",\r
+
+    \  \"brand\": \"HP\",\r
+
+    \  \"model\": \"HP Elitebook\",\r
+
+    \  \"serial_number\": \"SN-002\",\r
+
+    \  \"status\": \"em_uso\",\r
+
+    \  \"location_id\": \"{{location_id}}\",\r
+
+    \  \"technician_id\": \"{{technician_id}}\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: pm.collectionVariables.set("equipment_id", pm.response.json().id);
+    language: text/javascript
+order: 4151133361341031

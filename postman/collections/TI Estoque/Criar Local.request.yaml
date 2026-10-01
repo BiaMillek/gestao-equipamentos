@@ -1,0 +1,12 @@
+$kind: http-request
+description: ""
+url: http://localhost:3000/locations
+method: POST
+body:
+  type: json
+  content: '{ "name": "Almoxarifado TI", "description": "Sala 101" }'
+scripts:
+  - type: afterResponse
+    code: pm.collectionVariables.set("location_id", pm.response.json().id);
+    language: text/javascript
+order: 1790863350806

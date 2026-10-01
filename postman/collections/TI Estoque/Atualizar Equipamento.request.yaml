@@ -1,0 +1,21 @@
+$kind: http-request
+url: http://localhost:3000/equipments/{{equipment_id}}
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \  \"name\": \"Notebook Dell\",\r
+
+    \  \"brand\": \"Dell\",\r
+
+    \  \"model\": \"Latitude 5440\",\r
+
+    \  \"serial_number\": \"SN-002\",\r
+
+    \  \"status\": \"manutencao\",\r
+
+    \  \"location_id\": \"{{location_id}}\"\r
+
+    }"
+order: 4502704089267113

@@ -1,0 +1,5 @@
+$kind: collection
+variables:
+  location_id: ""
+  technician_id: ""
+  equipment_id: ""
