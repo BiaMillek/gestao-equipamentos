@@ -102,3 +102,5 @@ Obs.: `GET /equipments` retorna também `location` e `technician` (nome).
   "location_id": "<uuid-do-local>"
 }
 ```
+
+## Os arquivos com as solicitações do postman estão em:postman/collections/TI Estoque
