@@ -5,8 +5,8 @@ API REST para **gerenciamento de estoque de equipamentos do setor de TI**. Resol
 Domínio: gestão de ativos de TI.
 
 ## 2. Integrantes
--Bianca Mazepa Millek
--Gustav Britto
+###Bianca Mazepa Millek
+###Gustavo Britto
 
 ## 3. Tecnologias
 Node.js, TypeScript, Express, Supabase, PostgreSQL, Git, dotenv, cors, tsx.
