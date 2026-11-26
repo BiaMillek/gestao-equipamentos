@@ -151,3 +151,71 @@ O relatório fica em `coverage/` (abra `coverage/index.html`). Limiar configurad
 
 ## 13. Documentação Swagger
 Com a API rodando (`npm run dev`), acesse **http://localhost:3000/api-docs**. Lá é possível ver todos os endpoints, os schemas, exemplos e testar as requisições pelo botão *Try it out*.
+
+
+## CREATE TABLE DO SUPABASE
+
+-- =========================================
+-- TI ESTOQUE API - ESTRUTURA DO BANCO
+-- =========================================
+
+-- 1. TABELA DE LOCALIZAÇÕES
+CREATE TABLE IF NOT EXISTS public.locations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+-- 2. TABELA DE TÉCNICOS
+CREATE TABLE IF NOT EXISTS public.technicians (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(150) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+-- 3. TABELA DE EQUIPAMENTOS
+CREATE TABLE IF NOT EXISTS public.equipments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(150) NOT NULL,
+    brand VARCHAR(100),
+    model VARCHAR(100),
+    serial_number VARCHAR(150) NOT NULL UNIQUE,
+
+    status VARCHAR(20) NOT NULL DEFAULT 'disponivel',
+
+    location_id UUID NOT NULL,
+    technician_id UUID,
+
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+
+    CONSTRAINT fk_equipment_location
+        FOREIGN KEY (location_id)
+        REFERENCES public.locations(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT fk_equipment_technician
+        FOREIGN KEY (technician_id)
+        REFERENCES public.technicians(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT chk_equipment_status
+        CHECK (status IN (
+            'disponivel',
+            'em_uso',
+            'manutencao',
+            'baixado'
+        ))
+);
+
+-- =========================================
+-- ÍNDICES PARA RELACIONAMENTOS
+-- =========================================
+
+CREATE INDEX IF NOT EXISTS idx_equipments_location
+    ON public.equipments(location_id);
+
+CREATE INDEX IF NOT EXISTS idx_equipments_technician
+    ON public.equipments(technician_id);
+
