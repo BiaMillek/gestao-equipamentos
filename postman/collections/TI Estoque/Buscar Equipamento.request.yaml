@@ -1,7 +1,0 @@
-$kind: http-request
-url: http://localhost:3000/equipments/{{equipment_id}}
-method: GET
-body:
-  type: json
-  content: ""
-order: 4480488759456342

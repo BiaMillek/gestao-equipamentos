@@ -1,4 +1,0 @@
-$kind: http-request
-url: http://localhost:3000/equipments
-method: GET
-order: 4274721524554970
