@@ -1,4 +1,5 @@
-import { validateLocation } from '../models/location';
+import { equipmentRepository } from '../repositories/equipmentRepository';
 import { locationRepository } from '../repositories/locationRepository';
-import { createController } from './crudController';
-export const locationController = createController(locationRepository, validateLocation, 'Local');
+import { LocationService } from '../services/locationService';
+import { CrudController } from './crudController';
+export const locationController = new CrudController(new LocationService(locationRepository, equipmentRepository));

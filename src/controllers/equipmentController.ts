@@ -1,4 +1,8 @@
-import { validateEquipment } from '../models/equipment';
 import { equipmentRepository } from '../repositories/equipmentRepository';
-import { createController } from './crudController';
-export const equipmentController = createController(equipmentRepository, validateEquipment, 'Equipamento');
+import { locationRepository } from '../repositories/locationRepository';
+import { technicianRepository } from '../repositories/technicianRepository';
+import { EquipmentService } from '../services/equipmentService';
+import { CrudController } from './crudController';
+export const equipmentController = new CrudController(
+  new EquipmentService(equipmentRepository, locationRepository, technicianRepository)
+);

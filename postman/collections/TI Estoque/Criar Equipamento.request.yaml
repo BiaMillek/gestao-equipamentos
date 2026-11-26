@@ -24,4 +24,4 @@ scripts:
   - type: afterResponse
     code: pm.collectionVariables.set("equipment_id", pm.response.json().id);
     language: text/javascript
-order: 4151133361341031
+order: 3361624821586188

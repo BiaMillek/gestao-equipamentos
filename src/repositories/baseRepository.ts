@@ -1,7 +1,8 @@
 import { supabase } from '../config/supabase';
+import type { CrudRepository } from './interfaces';
 
-export class BaseRepository<T> {
-  constructor(private table: string, private select = '*') {}
+export class BaseRepository<T> implements CrudRepository<T> {
+  constructor(protected table: string, protected select = '*') {}
 
   async findAll(): Promise<T[]> {
     const { data, error } = await supabase.from(this.table).select(this.select).order('created_at', { ascending: false });

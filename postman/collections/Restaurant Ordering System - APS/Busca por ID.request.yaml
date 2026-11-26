@@ -1,0 +1,4 @@
+$kind: http-request
+url: http://localhost:3000/products/6e1affbc-0bcc-4b78-8414-8c1321f9ecd9
+method: GET
+order: 4499054913316547

@@ -9,4 +9,4 @@ scripts:
   - type: afterResponse
     code: pm.collectionVariables.set("location_id", pm.response.json().id);
     language: text/javascript
-order: 1790863350806
+order: 586943949993039

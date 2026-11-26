@@ -1,0 +1,197 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "sla",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    },
+    {
+      "url": ""
+    }
+  ],
+  "paths": {
+    "/locations": {
+      "post": {
+        "summary": "Criar Local",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "name": "Almoxarifado TI",
+                "description": "Sala 101"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/technicians": {
+      "post": {
+        "summary": "Criar Técnico",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              },
+              "example": {
+                "name": "Carlos Silva",
+                "email": "carlos2@empresa.com"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/equipments": {
+      "post": {
+        "summary": "Criar Equipamento",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "brand": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "serial_number": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "location_id": {
+                    "type": "string"
+                  },
+                  "technician_id": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "name": "Notebook HP",
+                "brand": "HP",
+                "model": "HP Elitebook",
+                "serial_number": "SN-002",
+                "status": "em_uso",
+                "location_id": "",
+                "technician_id": ""
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Listar Equipamentos",
+        "responses": {}
+      }
+    },
+    "/equipments/{equipment_id}": {
+      "get": {
+        "summary": "Buscar Equipamento",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "equipment_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": ""
+        }
+      ],
+      "put": {
+        "summary": "Atualizar Equipamento",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "brand": {
+                    "type": "string"
+                  },
+                  "model": {
+                    "type": "string"
+                  },
+                  "serial_number": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "location_id": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "name": "Notebook Dell",
+                "brand": "Dell",
+                "model": "Latitude 5440",
+                "serial_number": "SN-002",
+                "status": "manutencao",
+                "location_id": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Deletar Equipamento",
+        "responses": {}
+      }
+    }
+  }
+}

@@ -1,8 +1,7 @@
 import { Router } from 'express';
+import type { CrudController } from '../controllers/crudController';
 
-export function crudRouter(c: {
-  list: any; getById: any; create: any; update: any; remove: any;
-}) {
+export function crudRouter(c: CrudController) {
   const r = Router();
   r.get('/', c.list);
   r.get('/:id', c.getById);

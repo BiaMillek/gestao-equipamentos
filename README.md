@@ -5,12 +5,11 @@ API REST para **gerenciamento de estoque de equipamentos do setor de TI**. Resol
 Domínio: gestão de ativos de TI.
 
 ## 2. Integrantes
--Bianca Mazepa Millek
-
--Gustavo Britto
+- Bianca Mazepa Millek
+- Gustavo Britto Triaquim
 
 ## 3. Tecnologias
-Node.js, TypeScript, Express, Supabase, PostgreSQL, Git, dotenv, cors, tsx.
+Node.js, TypeScript, Express, Supabase, PostgreSQL, Vitest, Supertest, @vitest/coverage-v8, Swagger/OpenAPI (swagger-ui-express), Git, dotenv, cors, tsx.
 
 ## 4. Entidades e relacionamento
 **Location (locations)**: id, name, description, active
@@ -25,16 +24,22 @@ Node.js, TypeScript, Express, Supabase, PostgreSQL, Git, dotenv, cors, tsx.
 ```
 src/
 ├── config/        # conexão Supabase
-├── controllers/   # lógica HTTP (validação, status codes)
+├── controllers/   # camada HTTP (traduz requisição/resposta, chama o Service)
+├── docs/          # especificação Swagger/OpenAPI
 ├── errors/        # AppError
 ├── middlewares/   # tratamento de erros e 404
-├── models/        # interfaces e validações
-├── repositories/  # acesso ao Supabase/PostgreSQL
+├── models/        # interfaces e validações de formato
+├── repositories/  # acesso ao Supabase/PostgreSQL (classes)
 ├── routes/        # rotas Express
+├── services/      # regras de negócio (classes)
+├── tests/         # unit/ (Services com mocks) e integration/ (Supertest)
 ├── app.ts
 └── server.ts
 database/schema.sql
+vitest.config.ts
 ```
+
+Fluxo: `Route → Controller → Service (regras) → Repository → Supabase`. Os Services recebem os repositories por construtor (injeção de dependência), o que permite usar mocks nos testes unitários.
 
 ## 6. Configuração e execução
 ```bash
@@ -57,7 +62,22 @@ O `.env` real **não** é versionado (ver `.gitignore`).
 ## 8. Banco de dados
 Execute `database/schema.sql` no SQL Editor do Supabase. Cria as tabelas `locations`, `technicians` e `equipments` (FKs para as duas primeiras, IDs UUID, `serial_number` e `email` únicos, `status` com CHECK).
 
-## 9. Endpoints
+## 9. Regras de negócio
+**Equipamentos**
+- Número de série único (409).
+- O local informado deve existir e estar ativo (422); o técnico, quando informado, deve existir e estar ativo (422).
+- `status = em_uso` exige técnico (400); `status = disponivel` não pode ter técnico (422).
+- Equipamento `baixado` não pode mudar de status (422).
+- Equipamento `em_uso` não pode ser excluído (409).
+
+**Técnicos**
+- E-mail único e normalizado em minúsculas (409).
+- Não pode ser desativado nem excluído se for responsável por equipamentos (409).
+
+**Locais**
+- Não pode ser desativado se tiver equipamentos (não baixados) nem excluído se tiver equipamentos vinculados (409).
+
+## 10. Endpoints
 Recursos: `/equipments`, `/locations`, `/technicians` (mesmo padrão para os três).
 
 | Método | Endpoint | Descrição | Sucesso |
@@ -68,10 +88,11 @@ Recursos: `/equipments`, `/locations`, `/technicians` (mesmo padrão para os tr�
 | PUT | /{recurso}/:id | Atualiza | 200 |
 | DELETE | /{recurso}/:id | Remove | 204 |
 
-Erros: 400 (validação/ID inválido), 404 (não encontrado), 409 (FK/duplicidade), 500.
+Erros: 400 (validação/ID inválido), 404 (não encontrado), 409 (conflito/duplicidade/registro em uso), 422 (regra de negócio não atendida), 500.
+Documentação interativa: `GET /api-docs` (JSON em `/api-docs.json`).
 Obs.: `GET /equipments` retorna também `location` e `technician` (nome).
 
-## 10. Exemplos
+## 11. Exemplos
 **POST /locations**
 ```json
 { "name": "Almoxarifado TI", "description": "Sala 101, bloco A", "active": true }
@@ -103,4 +124,30 @@ Obs.: `GET /equipments` retorna também `location` e `technician` (nome).
 }
 ```
 
-## Os arquivos com as solicitações do postman estão em:postman/collections/TI Estoque
+## 12. Testes automatizados e cobertura
+Ferramentas: **Vitest**, **Supertest** e **@vitest/coverage-v8**.
+
+- `src/tests/unit/`: testes unitários dos Services, validadores e tratador de erros (repositories mockados, sem banco).
+- `src/tests/integration/`: testes de integração dos endpoints das 3 entidades (Supertest + Supabase real).
+
+```bash
+npm test                 # todos os testes
+npm run test:unit        # somente unitários
+npm run test:integration # somente integração
+npm run test:coverage    # testes + relatório de cobertura (falha se < 60%)
+```
+O relatório fica em `coverage/` (abra `coverage/index.html`). Limiar configurado em `vitest.config.ts`: 60% em linhas, instruções, funções e branches. Excluídos da medição apenas os testes e `src/server.ts` (ponto de entrada que só chama `listen`).
+
+**Cuidados com o banco:** os testes de integração usam o Supabase do `.env` (use um projeto/banco de testes). Cada execução cria registros com sufixo único e os remove ao final (`afterAll`), podendo ser executados várias vezes.
+
+**Cobertura alcançada:** _(preencher com o resultado de `npm run test:coverage`)_
+
+| Métrica | Cobertura |
+|---|---|
+| Statements | __% |
+| Branches | __% |
+| Functions | __% |
+| Lines | __% |
+
+## 13. Documentação Swagger
+Com a API rodando (`npm run dev`), acesse **http://localhost:3000/api-docs**. Lá é possível ver todos os endpoints, os schemas, exemplos e testar as requisições pelo botão *Try it out*.

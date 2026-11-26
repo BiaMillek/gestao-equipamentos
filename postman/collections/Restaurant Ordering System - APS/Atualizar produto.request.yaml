@@ -1,0 +1,19 @@
+$kind: http-request
+url: http://localhost:3000/products/6e1affbc-0bcc-4b78-8414-8c1321f9ecd9
+method: PUT
+body:
+  type: json
+  content: "\r
+
+    {\r
+
+    \  \"title\": \"X-Burger Especial\",\r
+
+    \  \"description\": \"Hambúrguer duplo com queijo, bacon e molho especial\",\r
+
+    \  \"price\": 32.90,\r
+
+    \  \"available\": true\r
+
+    }\r\n"
+order: 4502981033424756

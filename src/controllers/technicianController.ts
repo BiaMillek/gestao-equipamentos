@@ -1,4 +1,5 @@
-import { validateTechnician } from '../models/technician';
+import { equipmentRepository } from '../repositories/equipmentRepository';
 import { technicianRepository } from '../repositories/technicianRepository';
-import { createController } from './crudController';
-export const technicianController = createController(technicianRepository, validateTechnician, 'Técnico');
+import { TechnicianService } from '../services/technicianService';
+import { CrudController } from './crudController';
+export const technicianController = new CrudController(new TechnicianService(technicianRepository, equipmentRepository));

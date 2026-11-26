@@ -1,3 +1,5 @@
+import { isUuid } from './validators';
+
 export const STATUSES = ['disponivel', 'em_uso', 'manutencao', 'baixado'] as const;
 export type EquipmentStatus = (typeof STATUSES)[number];
 
@@ -13,8 +15,6 @@ export interface Equipment {
   active: boolean;
 }
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-export const isUuid = (v: any) => typeof v === 'string' && UUID.test(v);
 
 export function validateEquipment(b: any): string[] {
   const e: string[] = [];
