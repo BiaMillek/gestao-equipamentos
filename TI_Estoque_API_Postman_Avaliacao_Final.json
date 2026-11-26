@@ -1,0 +1,790 @@
+{
+  "info": {
+    "_postman_id": "5740e623-6785-4a97-b85b-468711df6f12",
+    "name": "TI Estoque API - Avaliação Final",
+    "description": "Coleção de testes funcionais da API TI Estoque. Execute em sequência: Locais > Técnicos > Equipamentos > Validações. Configure um ambiente com baseUrl (ex.: http://localhost:3000). As requisições de exclusão devem ser executadas por último, pois removem os registros criados.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Locais",
+      "item": [
+        {
+          "name": "Criar Local",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/locations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "locations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Almoxarifado TI {{$randomInt}}\",\n  \"description\": \"Sala de equipamentos\",\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Cria um local e salva locationId no ambiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.id).to.be.a('string');",
+                  "pm.environment.set('locationId', data.id);",
+                  "pm.environment.set('locationName', data.name);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar Locais",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/locations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "locations"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.expect(pm.response.json()).to.be.an('array');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Local por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/locations/{{locationId}}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.expect(pm.response.json().id).to.eql(pm.environment.get('locationId'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar Local",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/locations/{{locationId}}"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Almoxarifado TI - Atualizado\",\n  \"description\": \"Local atualizado pelo Postman\",\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.expect(pm.response.json().name).to.include('Atualizado');"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 - Técnicos",
+      "item": [
+        {
+          "name": "Criar Técnico",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/technicians",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "technicians"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carlos Silva {{$randomInt}}\",\n  \"email\": \"carlos.{{$randomInt}}@empresa.com\",\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Cria técnico e salva technicianId no ambiente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.id).to.be.a('string');",
+                  "pm.environment.set('technicianId', data.id);",
+                  "pm.environment.set('technicianName', data.name);",
+                  "pm.environment.set('technicianEmail', data.email);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar Técnicos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/technicians",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "technicians"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.expect(pm.response.json()).to.be.an('array');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Técnico por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/technicians/{{technicianId}}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.expect(pm.response.json().id).to.eql(pm.environment.get('technicianId'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar Técnico",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/technicians/{{technicianId}}"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carlos Silva - Atualizado\",\n  \"email\": \"carlos.atualizado.{{$randomInt}}@empresa.com\",\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.expect(pm.response.json().name).to.include('Atualizado');"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 - Equipamentos",
+      "item": [
+        {
+          "name": "Criar Equipamento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/equipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "equipments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Notebook Dell Latitude\",\n  \"brand\": \"Dell\",\n  \"model\": \"Latitude 5440\",\n  \"serial_number\": \"SN-{{$timestamp}}-{{$randomInt}}\",\n  \"status\": \"disponivel\",\n  \"location_id\": \"{{locationId}}\",\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Cria equipamento vinculado ao local. Salva equipmentId."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.id).to.be.a('string');",
+                  "pm.expect(data.status).to.eql('disponivel');",
+                  "pm.environment.set('equipmentId', data.id);",
+                  "pm.environment.set('equipmentSerial', data.serial_number);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar Equipamentos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/equipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "equipments"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.expect(pm.response.json()).to.be.an('array');",
+                  "const item = pm.response.json().find(e => e.id === pm.environment.get('equipmentId'));",
+                  "pm.expect(item).to.exist;"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Equipamento por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/equipments/{{equipmentId}}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.id).to.eql(pm.environment.get('equipmentId'));",
+                  "pm.expect(data.location).to.exist;"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar Equipamento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/equipments/{{equipmentId}}"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Notebook Dell Latitude - Atualizado\",\n  \"brand\": \"Dell\",\n  \"model\": \"Latitude 5440\",\n  \"serial_number\": \"{{equipmentSerial}}\",\n  \"status\": \"manutencao\",\n  \"location_id\": \"{{locationId}}\",\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.expect(pm.response.json().status).to.eql('manutencao');",
+                  "pm.expect(pm.response.json().name).to.include('Atualizado');"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 - Validações e regras de negócio",
+      "item": [
+        {
+          "name": "Local - rejeitar nome ausente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/locations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "locations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Sem nome\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', function () { pm.response.to.have.status(400); });",
+                  "pm.expect(pm.response.json().details).to.include('name é obrigatório');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Técnico - rejeitar e-mail inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/technicians",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "technicians"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Técnico Inválido\",\n  \"email\": \"email-invalido\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Equipamento - rejeitar dados obrigatórios ausentes",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/equipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "equipments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Equipamento - rejeitar status em_uso sem técnico",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/equipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "equipments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Equipamento sem técnico\",\n  \"serial_number\": \"SN-INVALIDO-{{$timestamp}}\",\n  \"status\": \"em_uso\",\n  \"location_id\": \"{{locationId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Equipamento - rejeitar local inexistente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/equipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "equipments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Equipamento local inexistente\",\n  \"serial_number\": \"SN-LOCAL-{{$timestamp}}\",\n  \"location_id\": \"00000000-0000-4000-8000-000000000000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422', function () { pm.response.to.have.status(422); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Equipamento - rejeitar status inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/equipments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "equipments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Equipamento status inválido\",\n  \"serial_number\": \"SN-STATUS-{{$timestamp}}\",\n  \"status\": \"quebrado\",\n  \"location_id\": \"{{locationId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 - Limpeza (executar por último)",
+      "item": [
+        {
+          "name": "Deletar Equipamento",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/equipments/{{equipmentId}}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deletar Técnico",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/technicians/{{technicianId}}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deletar Local",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/locations/{{locationId}}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "locationId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "locationName",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "technicianId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "technicianName",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "technicianEmail",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "equipmentId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "equipmentSerial",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
