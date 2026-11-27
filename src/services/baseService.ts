@@ -1,13 +1,16 @@
-import { AppError } from '../errors/AppError';
-import { isUuid } from '../models/validators';
-import type { CrudRepository } from '../repositories/interfaces';
+import { AppError } from "../errors/AppError";
+import { isUuid } from "../models/validators";
+import type { CrudRepository } from "../repositories/interfaces";
 
 /**
  * Serviço genérico: concentra validação, regras de negócio e orquestração do CRUD.
  * Cada entidade herda e sobrescreve os "hooks" com suas regras específicas.
  */
 export abstract class BaseService<T extends { id: string }> {
-  constructor(protected repo: CrudRepository<T>, protected label: string) {}
+  constructor(
+    protected repo: CrudRepository<T>,
+    protected label: string,
+  ) {}
 
   /** Campos que podem ser gravados (ignora id, created_at e qualquer outro campo). */
   protected abstract fields: string[];
@@ -23,7 +26,7 @@ export abstract class BaseService<T extends { id: string }> {
   protected async beforeDelete(_current: T): Promise<void> {}
 
   protected assertId(id: string): void {
-    if (!isUuid(id)) throw new AppError(400, 'ID inválido: deve ser um UUID');
+    if (!isUuid(id)) throw new AppError(400, "ID inválido: deve ser um UUID");
   }
 
   private pick(body: any): any {
@@ -34,7 +37,7 @@ export abstract class BaseService<T extends { id: string }> {
 
   private check(body: any): void {
     const errors = this.validate(body);
-    if (errors.length) throw new AppError(400, 'Dados inválidos', errors);
+    if (errors.length) throw new AppError(400, "Dados inválidos", errors);
   }
 
   async list(): Promise<T[]> {
@@ -49,18 +52,21 @@ export abstract class BaseService<T extends { id: string }> {
   }
 
   async create(body: any): Promise<T> {
-    this.check(body);
     const data = this.pick(body);
+    this.check(data);
     await this.beforeSave(data);
     return this.repo.create(data);
   }
 
   async update(id: string, body: any): Promise<T> {
     this.assertId(id);
-    this.check(body);
+
     const current = await this.getById(id);
     const data = this.pick(body);
+
+    this.check(data);
     await this.beforeSave(data, current);
+
     const item = await this.repo.update(id, data);
     if (!item) throw new AppError(404, `${this.label} não encontrado(a)`);
     return item;
