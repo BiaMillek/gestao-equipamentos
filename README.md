@@ -72,7 +72,7 @@ Representa os equipamentos cadastrados no estoque de TI.
 
 ### Diagrama de relacionamento
 
-
+![Diagrama de entidades e relacionamentos da TI Estoque API](docs/diagrama-entidades.png)
 
 **Relacionamentos:**
 
