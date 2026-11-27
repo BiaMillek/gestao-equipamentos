@@ -206,6 +206,7 @@ O repositório disponibiliza o arquivo `.env.example` com valores ilustrativos. 
 
 A persistência é realizada no Supabase utilizando PostgreSQL. O script `database/schema.sql`, localizado na pasta `database/`, cria as tabelas e seus relacionamentos.
 
+```text
 create extension if not exists "pgcrypto";
 
 create table locations (
@@ -237,7 +238,7 @@ create table equipments (
   active boolean not null default true,
   created_at timestamptz not null default now()
 );
-
+```
 
 ### Tabelas e chaves
 
